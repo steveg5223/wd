@@ -2,8 +2,6 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import watchlist from './watch';
-import { ArrowLeftRounded } from '@material-ui/icons';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -17,26 +15,25 @@ const useStyles = makeStyles((theme) => ({
       overflow: 'auto',
     },
     paperWrapper : {
-        display: 'flex',
-        width: '90%',
+        width: '50%',
         height: '90%',
-        borderBottom: '1px solid black',
+        float: 'left',
     },
     paperList : {
-        // width: '50%',
-        marginBlockStart: '.1em',
-        /* display: 'flex', */
+       marginLeft: '30px',
     },
     paperImageWrapper : {
-        float: 'right',
+        backgroundPosition: 'right',
     },
     paperImage : {
-        height: '120px',
+        height: '250px',
+        float: 'right',
     },
   }));
   
-  export default function DuJour() {
+  export default function DuJour(props) {
     const classes = useStyles();
+    const watches = props.watches;
   
     function FormRow(props) {
         const watchlist = props.watches;
@@ -44,22 +41,20 @@ const useStyles = makeStyles((theme) => ({
         <React.Fragment>
             {watchlist.map((watch) => {
                 const image = `/collection/phpsrc/resize_image.php?path=../img/wd/${watch.watchId}/face&width=150&height=150`;
+                const circa = watch.circa ? `Circa ${watch.circa}` : '';
+                const post = `${circa} ${watch.make} ${watch.model} ${watch.description} #womw #wruw #watch #watchnerd`
                 return (
-                    <Grid item xs={4}>
+                    <Grid item xs={4} key={watch.watchId}>
                         <Paper className={classes.paper}>
-                        <div className={classes.paperWrapper}>
-                            <span className={classes.paperImageWrapper}>
-                                    <a>
-                                        <img className={classes.paperImage} src={image}></img>
-                                    </a>
-                                </span>
+                        <div className={classes.paperWrapper} key={'img_' + watch.watchId}>
+                            <div className={classes.paperImageWrapper}>
+                                <img className={classes.paperImage} src={image}></img>
+                            </div>
                         </div>
                         <div className={classes.paperWrapper}>
-                        <ul className={classes.paperList}>
-                                <li>Circa: {watch.circa} {watch.make}: {watch.model}</li>
-                                <li>{watch.description}</li>
-                                <li>Last worn: {watch.last_worn}</li>
-                            </ul> 
+                            <div className={classes.paperList} key={'post_' + watch.watchId}>
+                                <span>{post}</span>
+                            </div> 
                         </div>
                         </Paper>
                     </Grid>
@@ -69,13 +64,13 @@ const useStyles = makeStyles((theme) => ({
       );
     }
 
-    
+    let rowKey = 0;
     return (
       <div className={classes.root}>
         <Grid container spacing={1}>
-            {watchlist.map((chunk) => {
+            {watches.map((chunk) => {
                 return (
-                    <Grid container item xs={12} spacing={3}>
+                    <Grid container item xs={12} spacing={3} key={rowKey++}>
                     <FormRow watches={chunk}/>
                   </Grid>
                   );

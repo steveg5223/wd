@@ -10,9 +10,17 @@
     }
 
    $path = ( (isset($_REQUEST['path']))? $_REQUEST['path'] : "");
-    $size_arr = getimagesize($path);
-   //echo  $path;exit;
-   if ($size_arr[2]==IMAGETYPE_GIF)
+   $thumbPath = $path . '.thumb';
+   $size_arr = getimagesize($path);
+   $imageAtime = fileatime ( $path );
+   $thumbAtime = fileatime ( $thumbPath );
+
+    // error_log('Path: ' . $path , 0);
+    // error_log('fileatime: ' . $imageAtime, 0);
+    // error_log('thumbAtime: ' . $thumbAtime, 0);
+
+   if (! $thumbAtime || $imageAtime > $thumbAtime) {
+    if ($size_arr[2]==IMAGETYPE_GIF)
         $image = imagecreatefromgif($path);
     else if ($size_arr[2]==IMAGETYPE_JPEG)
         $image = imagecreatefromjpeg($path);
@@ -21,15 +29,12 @@
     else
         die_default_image();
 
-    $tmpname = tempnam( sys_get_temp_dir() , "phptmp");
-
-    resize_image($tmpname, $image, $size_arr, $output_width, $output_height);
+    resize_image($thumbPath, $image, $size_arr, $output_width, $output_height);
+   }
 
     header('Content-Type: image/jpg');
     header('Content-Disposition: inline; filename="'.basename($path).'"');
-    echo file_get_contents( $tmpname );
-    unlink( $tmpname );
-    die('');
+    echo file_get_contents( $thumbPath );
 
 
 function die_default_image()
@@ -57,17 +62,3 @@ function resize_image($thumbname, $image, $size_arr, $max_width, $max_height)//m
     imagecopyresampled($tempimg, $image, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
     imagejpeg($tempimg, $thumbname, 80);
 }
-
-if (!function_exists('sys_get_temp_dir')) {
-  function sys_get_temp_dir() {
-    if (!empty($_ENV['TMP'])) { return realpath($_ENV['TMP']); }
-    if (!empty($_ENV['TMPDIR'])) { return realpath( $_ENV['TMPDIR']); }
-    if (!empty($_ENV['TEMP'])) { return realpath( $_ENV['TEMP']); }
-    $tempfile=tempnam(uniqid(rand(),TRUE),'');
-    if (file_exists($tempfile)) {
-    unlink($tempfile);
-    return realpath(dirname($tempfile));
-    }
-  }
-}
-?>

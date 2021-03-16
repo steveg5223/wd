@@ -728,9 +728,5 @@ const watch = [
        "circa":"1960",
        "last_worn":"2021-03-03 11:12:00"
     }
- ]
-  ;
-const watchlist = [];
-while (watch.length > 3) {watchlist.push(watch.splice(0,3))};
-watchlist.push(watch.splice(0,3))
-export default watchlist;
+ ];
+export default watch;
