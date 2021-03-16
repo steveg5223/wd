@@ -33,10 +33,24 @@ const useStyles = makeStyles((theme) => ({
   
   export default function DuJour(props) {
     const classes = useStyles();
-    const watches = props.watches;
+    let numPerRow; 
+    switch (Math.floor(window.screen.availWidth / 500)) {
+        case 0: numPerRow = 1; break; 
+        case 1: numPerRow = 2; break; 
+        case 2: numPerRow = 3; break; 
+        default: numPerRow = 4; break;  
+    }
+    console.log('numPerRow: %o', numPerRow)
+    const watches = [];
+    const inpuWatchList = props.watches.slice();
+    while (inpuWatchList.length > numPerRow) {
+      watches.push(inpuWatchList.splice(0,numPerRow));
+    };
+    watches.push(inpuWatchList.splice(0,numPerRow));
   
     function FormRow(props) {
         const watchlist = props.watches;
+        const xs = props.xs
       return (
         <React.Fragment>
             {watchlist.map((watch) => {
@@ -44,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
                 const circa = watch.circa ? `Circa ${watch.circa}` : '';
                 const post = `${circa} ${watch.make} ${watch.model} ${watch.description} #womw #wruw #watch #watchnerd`
                 return (
-                    <Grid item xs={4} key={watch.watchId}>
+                    <Grid item xs={xs} key={watch.watchId}>
                         <Paper className={classes.paper}>
                         <div className={classes.paperWrapper} key={'img_' + watch.watchId}>
                             <div className={classes.paperImageWrapper}>
@@ -71,7 +85,7 @@ const useStyles = makeStyles((theme) => ({
             {watches.map((chunk) => {
                 return (
                     <Grid container item xs={12} spacing={3} key={rowKey++}>
-                    <FormRow watches={chunk}/>
+                    <FormRow watches={chunk} xs={Math.floor(12 / numPerRow)}/>
                   </Grid>
                   );
             })}

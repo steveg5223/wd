@@ -1,4 +1,5 @@
 import React from 'react';
+import Async from "react-async";
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -7,7 +8,6 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import DuJour from './DuJour';
-import watchlist from './watch';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -56,13 +56,12 @@ export default function SimpleTabs() {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-  const numPerRow = 3;
-  const watches = [];
-  const inpuWatchList = watchlist.slice();
-  while (inpuWatchList.length > numPerRow) {
-    watches.push(inpuWatchList.splice(0,numPerRow))
-  };
-  watches.push(inpuWatchList.splice(0,numPerRow));
+
+  const loadWatches = async ({ playerId }, { signal }) => {
+    const res = await fetch(`/collection/watches.json`, { signal })
+    if (!res.ok) throw new Error(res.statusText);
+    return res.json()
+  }
 
   return (
     <div className={classes.root}>
@@ -74,7 +73,17 @@ export default function SimpleTabs() {
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        <DuJour watches={watches}/>
+        <Async promiseFn={loadWatches} playerId={1}>
+          <Async.Pending>Loading...</Async.Pending>
+          <Async.Fulfilled>
+            {watches => (
+              <DuJour watches={watches}/>
+            )}
+          </Async.Fulfilled>
+          <Async.Rejected>{error => `Something went wrong: ${error.message}`}</Async.Rejected>
+          </Async>
+        
+
       </TabPanel>
       <TabPanel value={value} index={1}>
         Collection page content
