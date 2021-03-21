@@ -8,9 +8,9 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import DuJour from './DuJour';
-
+import Collection from './Collection';
 function TabPanel(props) {
-  const { children, value, index, ...other } = props;
+  const { children, value, index, heading, ...other } = props;
 
   return (
     <div
@@ -22,6 +22,9 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box p={3}>
+          <Typography variant="h2" gutterBottom>
+           {heading}
+          </Typography>
           <Typography>{children}</Typography>
         </Box>
       )}
@@ -57,8 +60,14 @@ export default function SimpleTabs() {
     setValue(newValue);
   };
 
-  const loadWatches = async ({ playerId }, { signal }) => {
-    const res = await fetch(`/collection/watches.json`, { signal })
+  const getAllWatches = async ({ playerId }, { signal }) => {
+    const res = await fetch(`/collection/phpsrc/getCollection.php`, { signal })
+    if (!res.ok) throw new Error(res.statusText);
+    return res.json()
+  }
+
+  const getActiveWatches = async ({ playerId }, { signal }) => {
+    const res = await fetch(`/collection/phpsrc/getActive.php`, { signal })
     if (!res.ok) throw new Error(res.statusText);
     return res.json()
   }
@@ -72,24 +81,30 @@ export default function SimpleTabs() {
           <Tab label="About" {...a11yProps(2)} />
         </Tabs>
       </AppBar>
-      <TabPanel value={value} index={0}>
-        <Async promiseFn={loadWatches} playerId={1}>
+      <TabPanel value={value} index={0} heading={"You should really wear one of these..."}>
+        <Async promiseFn={getActiveWatches} playerId={1}>
           <Async.Pending>Loading...</Async.Pending>
           <Async.Fulfilled>
-            {watches => (
-              <DuJour watches={watches}/>
+            {response => (
+              <DuJour response={response}/>
             )}
           </Async.Fulfilled>
           <Async.Rejected>{error => `Something went wrong: ${error.message}`}</Async.Rejected>
           </Async>
-        
-
       </TabPanel>
-      <TabPanel value={value} index={1}>
-        Collection page content
+      <TabPanel value={value} index={1} heading={"You need to buy another watch."}>
+        <Async promiseFn={getAllWatches} playerId={1}>
+          <Async.Pending>Loading...</Async.Pending>
+          <Async.Fulfilled>
+            {response => (
+              <Collection response={response}/>
+            )}
+          </Async.Fulfilled>
+          <Async.Rejected>{error => `Something went wrong: ${error.message}`}</Async.Rejected>
+          </Async>
       </TabPanel>
-      <TabPanel value={value} index={2}>
-        About page content
+      <TabPanel value={value} index={2}heading={"About page content"}>
+        Description of your collection
       </TabPanel>
     </div>
   );

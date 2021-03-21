@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
     },
   }));
   
-  export default function DuJour(props) {
+  export default function Collection(props) {
     const classes = useStyles();
     let numPerRow; 
     switch (Math.floor(window.screen.availWidth / 500)) {
@@ -40,9 +40,7 @@ const useStyles = makeStyles((theme) => ({
         case 2: numPerRow = 3; break; 
         default: numPerRow = 4; break;  
     }
-    console.log('numPerRow: %o', numPerRow)
     const watches = [];
-    console.log('props = %o', props);
     const inpuWatchList = props.response.watchList.slice();
     while (inpuWatchList.length > numPerRow) {
       watches.push(inpuWatchList.splice(0,numPerRow));
@@ -68,7 +66,7 @@ const useStyles = makeStyles((theme) => ({
                         </div>
                         <div className={classes.paperWrapper}>
                             <div className={classes.paperList} key={'post_' + watch.watchId}>
-                                <span>{post}<br /> Date last worn: {watch.last_worn}</span>
+                                <span>{post}</span>
                             </div> 
                         </div>
                         </Paper>

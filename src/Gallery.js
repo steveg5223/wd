@@ -42,8 +42,7 @@ const useStyles = makeStyles((theme) => ({
     }
     console.log('numPerRow: %o', numPerRow)
     const watches = [];
-    console.log('props = %o', props);
-    const inpuWatchList = props.response.watchList.slice();
+    const inpuWatchList = props.watches.slice();
     while (inpuWatchList.length > numPerRow) {
       watches.push(inpuWatchList.splice(0,numPerRow));
     };
@@ -55,6 +54,9 @@ const useStyles = makeStyles((theme) => ({
       return (
         <React.Fragment>
             {watchlist.map((watch) => {
+                if (! watch.active ) {
+                    return;
+                }
                 const image = `/collection/phpsrc/resize_image.php?path=../img/wd/${watch.watchId}/face&width=150&height=150`;
                 const circa = watch.circa ? `Circa ${watch.circa}` : '';
                 const post = `${circa} ${watch.make} ${watch.model} ${watch.description} #womw #wruw #watch #watchnerd`
@@ -68,7 +70,7 @@ const useStyles = makeStyles((theme) => ({
                         </div>
                         <div className={classes.paperWrapper}>
                             <div className={classes.paperList} key={'post_' + watch.watchId}>
-                                <span>{post}<br /> Date last worn: {watch.last_worn}</span>
+                                <span>{post}</span>
                             </div> 
                         </div>
                         </Paper>
