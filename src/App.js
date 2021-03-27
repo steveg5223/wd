@@ -54,56 +54,62 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SimpleTabs() {
   const classes = useStyles();
-  const [value, setValue] = React.useState(0);
+  const [selectedTab, setSelectedTab] = React.useState(0);
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
+  const selectNewTab = (event, newValue) => {
+    setSelectedTab(newValue);
   };
 
-  const getAllWatches = async ({ playerId }, { signal }) => {
+  const getAllWatches = async (props, { signal }) => {
     const res = await fetch(`/collection/phpsrc/getCollection.php`, { signal })
     if (!res.ok) throw new Error(res.statusText);
     return res.json()
-  }
+  };
 
   const getActiveWatches = async ({ playerId }, { signal }) => {
     const res = await fetch(`/collection/phpsrc/getActive.php`, { signal })
     if (!res.ok) throw new Error(res.statusText);
     return res.json()
-  }
+  };
+
+  const setDateWorn = (watchId) => {
+    return () => {
+      alert('clicked watch: ' + watchId);
+    }      
+  };
 
   return (
     <div className={classes.root}>
       <AppBar position="static">
-        <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
+        <Tabs value={selectedTab} onChange={selectNewTab} aria-label="simple tabs example">
           <Tab label="Du Jour" {...a11yProps(0)} />
           <Tab label="Collection" {...a11yProps(1)} />
           <Tab label="About" {...a11yProps(2)} />
         </Tabs>
       </AppBar>
-      <TabPanel value={value} index={0} heading={"You should really wear one of these..."}>
+      <TabPanel value={selectedTab} index={0} heading={"You should really wear one of these..."}>
         <Async promiseFn={getActiveWatches} playerId={1}>
           <Async.Pending>Loading...</Async.Pending>
           <Async.Fulfilled>
             {response => (
-              <DuJour response={response}/>
+              <DuJour response={response} setDateWorn={setDateWorn}/>
             )}
           </Async.Fulfilled>
           <Async.Rejected>{error => `Something went wrong: ${error.message}`}</Async.Rejected>
           </Async>
       </TabPanel>
-      <TabPanel value={value} index={1} heading={"You need to buy another watch."}>
+      <TabPanel value={selectedTab} index={1} heading={"You need to buy another watch."}>
         <Async promiseFn={getAllWatches} playerId={1}>
           <Async.Pending>Loading...</Async.Pending>
           <Async.Fulfilled>
             {response => (
-              <Collection response={response}/>
+              <Collection response={response} setDateWorn={setDateWorn}/>
             )}
           </Async.Fulfilled>
           <Async.Rejected>{error => `Something went wrong: ${error.message}`}</Async.Rejected>
           </Async>
       </TabPanel>
-      <TabPanel value={value} index={2}heading={"About page content"}>
+      <TabPanel value={selectedTab} index={2}heading={"About page content"}>
         Description of your collection
       </TabPanel>
     </div>
