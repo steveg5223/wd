@@ -55,6 +55,7 @@ const useStyles = makeStyles((theme) => ({
 export default function SimpleTabs() {
   const classes = useStyles();
   const [selectedTab, setSelectedTab] = React.useState(0);
+  const [updatedDate, setUpdatedDate] = React.useState(Date.now());
 
   const selectNewTab = (event, newValue) => {
     setSelectedTab(newValue);
@@ -72,10 +73,18 @@ export default function SimpleTabs() {
     return res.json()
   };
 
-  const setDateWorn = (watchId) => {
-    return () => {
-      alert('clicked watch: ' + watchId);
-    }      
+  const setDateWorn = async (watchId) => {
+    const now = Math.round((new Date()).getTime() / 1000);
+    const res = await fetch(`/collection/phpsrc/updateDateWorn.php`, { 
+      method: 'POST',
+      body: JSON.stringify({
+        watchId : watchId,
+        date: now,
+        date_last_worn: now
+      })
+    })
+    if (!res.ok) throw new Error(res.statusText);
+    setUpdatedDate(Date.now());
   };
 
   return (
@@ -92,7 +101,7 @@ export default function SimpleTabs() {
           <Async.Pending>Loading...</Async.Pending>
           <Async.Fulfilled>
             {response => (
-              <DuJour response={response} setDateWorn={setDateWorn}/>
+              <DuJour response={response} setDateWorn={setDateWorn} updatedDate={updatedDate}/>
             )}
           </Async.Fulfilled>
           <Async.Rejected>{error => `Something went wrong: ${error.message}`}</Async.Rejected>
@@ -103,7 +112,7 @@ export default function SimpleTabs() {
           <Async.Pending>Loading...</Async.Pending>
           <Async.Fulfilled>
             {response => (
-              <Collection response={response} setDateWorn={setDateWorn}/>
+              <Collection response={response} setDateWorn={setDateWorn} updatedDate={updatedDate}/>
             )}
           </Async.Fulfilled>
           <Async.Rejected>{error => `Something went wrong: ${error.message}`}</Async.Rejected>

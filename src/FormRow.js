@@ -44,6 +44,11 @@ export default     function FormRow(props) {
     const setDateWorn = props.setDateWorn;
     const isLoggedIn = props.isLoggedIn;
     const classes = useStyles();
+    const handleClickResetDate = (watchId) => {
+        return () => {
+            setDateWorn(watchId);
+        };
+    };
 
   return (
     <React.Fragment>
@@ -67,7 +72,7 @@ export default     function FormRow(props) {
                     {isLoggedIn && 
                       <div className={classes.paperButtonWrapper}>
                       <div className={classes.paperButton} key={'post_' + watch.watchId}>
-                          <Button variant="contained" color="primary" onClick={setDateWorn(watch.watchId)}>
+                          <Button variant="contained" color="primary" onClick={handleClickResetDate(watch.watchId)}>
                             Reset Date
                           </Button>
                       </div> 

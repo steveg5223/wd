@@ -1,31 +1,36 @@
 <?php 
 // Initialize the session
 session_start();
-if (! $_SESSION["loggedin"] ) {
-  die("User authentication error");
+if ( false /* ! $_SESSION["loggedin"] */) {
+  header('HTTP/1.1 401 Unauthorized');
 }
-require 'connection.php';
+else {
+  require 'connection.php';
 
-if ($mysqli->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-  
-  $date = isset($_POST['date']) ? $_POST['date'] : date("Y-m-d H:i:s");
-  $drift = isset($_POST['drift']) ? $_POST['drift'] : null;
-  $adjusted_drift = isset($_POST['adjusted_drift']) ? $_POST['adjusted_drift'] : null;
-  $watchID = isset($_POST['watchID']) ? $_POST['watchID'] : null;
-  $date_last_worn = isset($_POST['date_last_worn']) ? $_POST['date_last_worn'] : date("Y-m-d H:i:s");
-  
-  $sql = 
-  "insert into observation (date, drift, adjusted_drift, watchID, date_last_worn) 
-  values (?, ?, ?, (select watchID from watch where watchId = ?), ?)";
-  $stmt = $mysqli->prepare(sql);
-  $stmt->bind_param("sssss", $date, $drift, $adjusted_drift, $watchID, $date_last_worn);
-
-  if ($mysqli->query($sql) === TRUE) {
-    echo "New record created successfully";
-  } else {
-    echo "Error: " . $sql . "<br>" . $conn->error;
+  if ($mysqli->connect_error) {
+      die("Connection failed: " . $conn->connect_error);
   }
+    $post_data = json_decode(file_get_contents('php://input'), true);
+    $date = isset($post_data['date']) ? $post_data['date'] : date("Y-m-d H:i:s");
+    $drift = isset($post_data['drift']) ? $post_data['drift'] : null;
+    $adjusted_drift = isset($post_data['adjusted_drift']) ? $post_data['adjusted_drift'] : null;
+    $watchID = isset($post_data['watchId']) ? $post_data['watchId'] : null;
+    $date_last_worn = isset($post_data['date_last_worn']) ? $post_data['date_last_worn'] : date("Y-m-d H:i:s");
+
+    $sql = "INSERT INTO observation(watchID, date, date_last_worn) VALUES (?, NOW(),  NOW())";
+    $stmt = $mysqli->prepare($sql);
+    
+    $stmt->bind_param("s", $watchID);
+    $stmt->execute();
   
-  $mysqli->close();
+    if ($stmt->error == '') {
+      $response = new stdClass();
+      $response->message = 'New record created successfully';
+      header('Content-Type: application/json');
+      echo json_encode($response);
+    } else {
+      echo "Error: " . $sql . "<br>" . $conn->error;
+    }
+    
+    $mysqli->close();
+}
