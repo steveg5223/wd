@@ -1,7 +1,7 @@
 <?php 
 // Initialize the session
 session_start();
-if ( false /* ! $_SESSION["loggedin"] */) {
+if ( ! $_SESSION["loggedin"] ) {
   header('HTTP/1.1 401 Unauthorized');
 }
 else {
@@ -17,7 +17,9 @@ else {
     $watchID = isset($post_data['watchId']) ? $post_data['watchId'] : null;
     $date_last_worn = isset($post_data['date_last_worn']) ? $post_data['date_last_worn'] : date("Y-m-d H:i:s");
 
-    $sql = "INSERT INTO observation(watchID, date, date_last_worn) VALUES (?, NOW(),  NOW())";
+    $sql = 
+    "INSERT INTO observation(watchID, date, date_last_worn) 
+    VALUES ((SELECT watchId from watch where watchId = ?), NOW(),  NOW())";
     $stmt = $mysqli->prepare($sql);
     
     $stmt->bind_param("s", $watchID);

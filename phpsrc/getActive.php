@@ -27,4 +27,4 @@ $output->isLoggedIn = (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] ===
 // print_r($_SESSION);
     echo json_encode($output);
 /* close connection */
-mysqli_close($dblink);
+mysqli_close($mysqli);

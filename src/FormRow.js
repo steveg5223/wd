@@ -53,7 +53,7 @@ export default     function FormRow(props) {
   return (
     <React.Fragment>
         {watchlist.map((watch) => {
-            const image = `/collection/phpsrc/resize_image.php?path=../img/wd/${watch.watchId}/face&width=150&height=150`;
+            const image = `/collection/phpsrc/getImageThumb.php?path=../img/wd/${watch.watchId}/face&width=300&height=300`;
             const circa = watch.circa ? `Circa ${watch.circa}` : '';
             const post = `${circa} ${watch.make} ${watch.model} ${watch.description} #womw #wruw #watch #watchnerd`
             return (
