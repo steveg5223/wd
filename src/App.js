@@ -57,7 +57,7 @@ export default function SimpleTabs() {
   const classes = useStyles();
   const [selectedTab, setSelectedTab] = React.useState(0);
   const [updatedDate, setUpdatedDate] = React.useState(Date.now());
-  const [requestedWatchId, setrequestedWatchId] = React.useState(null);
+  const [requestedWatchId, setRequestedWatchId] = React.useState(null);
 
   const selectNewTab = (event, newValue) => {
     setSelectedTab(newValue);
@@ -96,7 +96,7 @@ export default function SimpleTabs() {
         <DuJourWrapper 
           setDateWorn={setDateWorn} 
           updatedDate={updatedDate}
-          setrequestedWatchId={setrequestedWatchId}
+          setRequestedWatchId={setRequestedWatchId}
           requestedWatchId={requestedWatchId}
         />
       </TabPanel>
@@ -108,7 +108,7 @@ export default function SimpleTabs() {
               <Collection 
               response={response} 
               setDateWorn={setDateWorn} 
-              setrequestedWatchId={setrequestedWatchId}
+              setRequestedWatchId={setRequestedWatchId}
               />
             )}
           </Async.Fulfilled>

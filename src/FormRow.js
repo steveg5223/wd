@@ -42,15 +42,15 @@ const useStyles = makeStyles((theme) => ({
   }));
  
 export default function FormRow(props) {
-    const watchlist = props.watches;
+    const watchlist = props.watchlist;
     const xs = props.xs;
     const setDateWorn = props.setDateWorn;
     const isLoggedIn = props.isLoggedIn;
-    const setrequestedWatchId = props.setrequestedWatchId;
+    const setRequestedWatchId = props.setRequestedWatchId;
     const classes = useStyles();
     const handleClickDetails = (watchId) => {
       return () => {
-        setrequestedWatchId(watchId);
+        setRequestedWatchId(watchId);
       };
     };
     const handleClickResetDate = (watchId) => {

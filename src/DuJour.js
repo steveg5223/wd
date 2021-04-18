@@ -12,9 +12,8 @@ const useStyles = makeStyles((theme) => ({
   
   export default function DuJour(props) {
     const classes = useStyles();
-    const isLoggedIn = props.response.isLoggedIn;
-    const setDateWorn = props.setDateWorn;
-    const setrequestedWatchId = props.setrequestedWatchId;
+    const {isLoggedIn, setDateWorn, setRequestedWatchId} = props;
+
     let numPerRow; 
     switch (Math.floor(window.screen.availWidth / 500)) {
         case 0: numPerRow = 1; break; 
@@ -22,6 +21,7 @@ const useStyles = makeStyles((theme) => ({
         case 2: numPerRow = 3; break; 
         default: numPerRow = 4; break;  
     }
+
     const watches = [];
     const inpuWatchList = props.response.watchList.slice();
     while (inpuWatchList.length > numPerRow) {
@@ -30,21 +30,22 @@ const useStyles = makeStyles((theme) => ({
     watches.push(inpuWatchList.splice(0,numPerRow));
   
     let rowKey = 0;
+
     return (
       <div className={classes.root}>
         <Grid container spacing={1}>
             {watches.map((chunk) => {
                 return (
-                    <Grid container item xs={12} spacing={3} key={rowKey++}>
+                  <Grid container item xs={12} spacing={3} key={rowKey++}>
                     <FormRow 
-                    watches={chunk} 
-                    xs={Math.floor(12 / numPerRow)} 
-                    isLoggedIn={isLoggedIn}
-                    setDateWorn={setDateWorn}
-                    setrequestedWatchId={setrequestedWatchId}
+                      watchlist={chunk} 
+                      xs={Math.floor(12 / numPerRow)} 
+                      isLoggedIn={isLoggedIn}
+                      setDateWorn={setDateWorn}
+                      setRequestedWatchId={setRequestedWatchId}
                     />
-                  </Grid>
-                  );
+                </Grid>
+                );
             })}
         </Grid>
       </div>

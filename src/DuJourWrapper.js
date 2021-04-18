@@ -4,7 +4,7 @@ import DuJour from './DuJour';
 import WatchDetails from './WatchDetails'
 
 export default function DuJourWrapper(props) {
-    const {setDateWorn, requestedWatchId, setrequestedWatchId} = props;
+    const {setDateWorn, requestedWatchId, setRequestedWatchId} = props;
 
     const getActiveWatches = async () => {
         const res = await fetch(`/collection/phpsrc/getActive.php`)
@@ -28,7 +28,7 @@ export default function DuJourWrapper(props) {
             <DuJour 
             response={response} 
             setDateWorn={setDateWorn} 
-            setrequestedWatchId={setrequestedWatchId}
+            setRequestedWatchId={setRequestedWatchId}
             />
           )}
         </Async.Fulfilled>
@@ -42,7 +42,7 @@ export default function DuJourWrapper(props) {
             <WatchDetails 
             response={response} 
             setDateWorn={setDateWorn} 
-            setrequestedWatchId={setrequestedWatchId}
+            setRequestedWatchId={setRequestedWatchId}
             />
           )}
         </Async.Fulfilled>
