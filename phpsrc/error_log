@@ -1,0 +1,4 @@
+[17-Apr-2021 03:58:14 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method mysqli_stmt::get_result() in /home/psenakwatch/public_html/collection/phpsrc/getWatchDetails.php:18
+Stack trace:
+#0 {main}
+  thrown in /home/psenakwatch/public_html/collection/phpsrc/getWatchDetails.php on line 18

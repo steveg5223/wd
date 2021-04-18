@@ -14,6 +14,7 @@ const useStyles = makeStyles((theme) => ({
     const classes = useStyles();
     const isLoggedIn = props.response.isLoggedIn;
     const setDateWorn = props.setDateWorn;
+    const setrequestedWatchId = props.setrequestedWatchId;
     let numPerRow; 
     switch (Math.floor(window.screen.availWidth / 500)) {
         case 0: numPerRow = 1; break; 
@@ -40,6 +41,7 @@ const useStyles = makeStyles((theme) => ({
                     xs={Math.floor(12 / numPerRow)} 
                     isLoggedIn={isLoggedIn}
                     setDateWorn={setDateWorn}
+                    setrequestedWatchId={setrequestedWatchId}
                     />
                   </Grid>
                   );

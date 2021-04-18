@@ -8,7 +8,7 @@ else {
   require 'connection.php';
 
   if ($mysqli->connect_error) {
-      die("Connection failed: " . $conn->connect_error);
+      die("Connection failed: " . $mysqli->connect_error);
   }
     $post_data = json_decode(file_get_contents('php://input'), true);
     $date = isset($post_data['date']) ? $post_data['date'] : date("Y-m-d H:i:s");
@@ -31,7 +31,7 @@ else {
       header('Content-Type: application/json');
       echo json_encode($response);
     } else {
-      echo "Error: " . $sql . "<br>" . $conn->error;
+      echo "Error: " . $sql . "<br>" . $mysqli->error;
     }
     
     $mysqli->close();

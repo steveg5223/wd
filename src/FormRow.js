@@ -30,20 +30,29 @@ const useStyles = makeStyles((theme) => ({
       display: 'table',
       width: '100%',
     },
-    paperButton : {
+    paperButtonDiv : {
       display: 'table-cell',
       textAlign: 'right',
       verticalAlign: 'bottom',
       width: '150px',
     },
+    paperButton : {
+      marginLeft: '10px',
+    },
   }));
  
-export default     function FormRow(props) {
+export default function FormRow(props) {
     const watchlist = props.watches;
     const xs = props.xs;
     const setDateWorn = props.setDateWorn;
     const isLoggedIn = props.isLoggedIn;
+    const setrequestedWatchId = props.setrequestedWatchId;
     const classes = useStyles();
+    const handleClickDetails = (watchId) => {
+      return () => {
+        setrequestedWatchId(watchId);
+      };
+    };
     const handleClickResetDate = (watchId) => {
         return () => {
             setDateWorn(watchId);
@@ -66,18 +75,35 @@ export default     function FormRow(props) {
                     </div>
                     <div className={classes.paperWrapper}>
                         <div className={classes.paperList} key={'post_' + watch.watchId}>
-                            <span>{post}<br /> Date last worn: {watch.last_worn}</span>
+                            <span>
+                              {post}<br /> 
+                              Date last worn:<br /> 
+                              {watch.last_worn}
+                            </span>
                         </div> 
                     </div>
-                    {isLoggedIn && 
                       <div className={classes.paperButtonWrapper}>
-                      <div className={classes.paperButton} key={'post_' + watch.watchId}>
-                          <Button variant="contained" color="primary" onClick={handleClickResetDate(watch.watchId)}>
-                            Reset Date
-                          </Button>
-                      </div> 
+                      <div className={classes.paperButtonDiv} key={'post_' + watch.watchId}>
+                      <Button 
+                        className={classes.paperButton} 
+                        variant="contained" 
+                        color="primary" 
+                        onClick={handleClickDetails(watch.watchId)}
+                      >
+                        Details
+                      </Button>
+                      {isLoggedIn && 
+                      <Button 
+                        className={classes.paperButton} 
+                        variant="contained" 
+                        color="primary" 
+                        onClick={handleClickResetDate(watch.watchId)}
+                      >
+                        Reset Date
+                      </Button>
+                      }
+                    </div> 
                       </div>
-                    }
                     </Paper>
                 </Grid>
             );
