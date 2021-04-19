@@ -1,5 +1,4 @@
 import React from 'react';
-import Async from "react-async";
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -7,9 +6,9 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import Collection from './Collection';
 import About from './About';
 import DuJourWrapper from './DuJourWrapper';
+import CollectionWrapper from './CollectionWrapper'
 function TabPanel(props) {
   const { children, value, index, heading, ...other } = props;
 
@@ -63,14 +62,9 @@ export default function SimpleTabs() {
     setSelectedTab(newValue);
   };
 
-  const getAllWatches = async (props, { signal }) => {
-    const res = await fetch(`/collection/phpsrc/getCollection.php`, { signal })
-    if (!res.ok) throw new Error(res.statusText);
-    return res.json()
-  };
 
   const setDateWorn = async (watchId) => {
-    const now = Math.round((new Date()).getTime() / 1000);
+    const now = Math.round(updatedDate.getTime() / 1000);
     const res = await fetch(`/collection/phpsrc/updateDateWorn.php`, { 
       method: 'POST',
       body: JSON.stringify({
@@ -101,19 +95,11 @@ export default function SimpleTabs() {
         />
       </TabPanel>
       <TabPanel value={selectedTab} index={1} heading={"You need to buy another watch."}>
-        <Async promiseFn={getAllWatches} >
-          <Async.Pending>Loading...</Async.Pending>
-          <Async.Fulfilled>
-            {response => (
-              <Collection 
-              response={response} 
-              setDateWorn={setDateWorn} 
-              setRequestedWatchId={setRequestedWatchId}
-              />
-            )}
-          </Async.Fulfilled>
-          <Async.Rejected>{error => `Something went wrong: ${error.message}`}</Async.Rejected>
-          </Async>
+        <CollectionWrapper 
+          setDateWorn={setDateWorn} 
+          setRequestedWatchId={setRequestedWatchId}
+          requestedWatchId={requestedWatchId}
+        />
       </TabPanel>
       <TabPanel value={selectedTab} index={2} heading={"About page content"}>
         <About />
