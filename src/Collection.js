@@ -12,9 +12,8 @@ const useStyles = makeStyles((theme) => ({
   export default function Collection(props) {
     const classes = useStyles();
     let numPerRow; 
+    const [setDateWorn, setRequestedWatchId] = props;
     const isLoggedIn = props.response.isLoggedIn;
-    const setDateWorn = props.setDateWorn;
-    const setRequestedWatchId = props.setRequestedWatchId;
     switch (Math.floor(window.screen.availWidth / 500)) {
         case 0: numPerRow = 1; break; 
         case 1: numPerRow = 2; break; 

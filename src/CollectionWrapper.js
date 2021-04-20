@@ -14,7 +14,7 @@ export default function CollectionWrapper(props) {
             .then((response) => { return response.json(); })
             .then((data) => { setWatchList(data);})
         }
-      }, [requestedWatchId]);
+      }, [requestedWatchId, setDateWorn]);
   
       useEffect(() => {
         const url = `/collection/phpsrc/getWatchDetails.php?watchId=${requestedWatchId}`;
@@ -23,7 +23,7 @@ export default function CollectionWrapper(props) {
           .then((response) => { return response.json(); })
           .then((data) => { setActiveWatchDetails(data); })
         }
-      }, [requestedWatchId]);
+      }, [requestedWatchId, setDateWorn]);
 
     return requestedWatchId === null ? (
         <Collection 

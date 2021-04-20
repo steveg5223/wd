@@ -12,7 +12,8 @@ const useStyles = makeStyles((theme) => ({
   
   export default function DuJour(props) {
     const classes = useStyles();
-    const {isLoggedIn, setDateWorn, setRequestedWatchId} = props;
+    const isLoggedIn = props.response.isLoggedIn;
+    const {setDateWorn, setRequestedWatchId} = props;
 
     let numPerRow; 
     switch (Math.floor(window.screen.availWidth / 500)) {

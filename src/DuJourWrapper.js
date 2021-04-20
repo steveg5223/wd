@@ -3,7 +3,7 @@ import DuJour from './DuJour';
 import WatchDetails from './WatchDetails'
 
 export default function DuJourWrapper(props) {
-    const {setDateWorn, requestedWatchId, setRequestedWatchId} = props;
+    const {setDateWorn, requestedWatchId, setRequestedWatchId, updatedDate} = props;
     const [activeWatchList, setActiveWatchList] = useState({watchList: []});
     const [activeWatchDetails, setActiveWatchDetails] = useState({});
 
@@ -16,7 +16,7 @@ export default function DuJourWrapper(props) {
             setActiveWatchList(data);
           })
       }
-    }, [requestedWatchId]);
+    }, [requestedWatchId, updatedDate]);
 
     useEffect( () => {
       const url = `/collection/phpsrc/getWatchDetails.php?watchId=${requestedWatchId}`;
@@ -27,7 +27,7 @@ export default function DuJourWrapper(props) {
           setActiveWatchDetails(data);
         })
       }
-    }, [requestedWatchId]);
+    }, [requestedWatchId, updatedDate]);
 
     return requestedWatchId === null ? (
       <DuJour 
