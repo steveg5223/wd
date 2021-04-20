@@ -1,52 +1,45 @@
-import React from 'react';
-import Async from "react-async";
+import React, { useState, useEffect } from 'react';
 import DuJour from './DuJour';
 import WatchDetails from './WatchDetails'
 
 export default function DuJourWrapper(props) {
     const {setDateWorn, requestedWatchId, setRequestedWatchId} = props;
+    const [activeWatchList, setActiveWatchList] = useState({watchList: []});
+    const [activeWatchDetails, setActiveWatchDetails] = useState({});
 
-    const getActiveWatches = async () => {
-        const res = await fetch(`/collection/phpsrc/getActive.php`)
-        if (!res.ok) throw new Error(res.statusText);
-        return res.json();
-    };
-      
-    const chooseWatch = async () => {
-        const res = await fetch(`/collection/phpsrc/getWatchDetails.php?watchId=${requestedWatchId}`, { 
-        method: 'GET',
+    useEffect(() => {
+      const url = `/collection/phpsrc/getActive.php`;
+      if (requestedWatchId === null) {
+        fetch(url)
+          .then((response) => { return response.json(); })
+          .then((data) => {
+            setActiveWatchList(data);
+          })
+      }
+    }, [requestedWatchId]);
+
+    useEffect( () => {
+      const url = `/collection/phpsrc/getWatchDetails.php?watchId=${requestedWatchId}`;
+      if (requestedWatchId !== null) {
+        fetch(url)
+        .then((response) => { return response.json(); })
+        .then((data) => {
+          setActiveWatchDetails(data);
         })
-        if (!res.ok) throw new Error(res.statusText);
-        return res.json();
-    };
+      }
+    }, [requestedWatchId]);
 
     return requestedWatchId === null ? (
-        <Async promiseFn={getActiveWatches} >
-        <Async.Pending>Loading...</Async.Pending>
-        <Async.Fulfilled>
-          {response => (
-            <DuJour 
-            response={response} 
-            setDateWorn={setDateWorn} 
-            setRequestedWatchId={setRequestedWatchId}
-            />
-          )}
-        </Async.Fulfilled>
-        <Async.Rejected>{error => `Something went wrong: ${error.message}`}</Async.Rejected>
-        </Async>
+      <DuJour 
+      response={activeWatchList} 
+      setDateWorn={setDateWorn} 
+      setRequestedWatchId={setRequestedWatchId}
+      />
     ) : (
-        <Async promiseFn={chooseWatch} >
-        <Async.Pending>Loading...</Async.Pending>
-        <Async.Fulfilled>
-          {response => (
-            <WatchDetails 
-            response={response} 
-            setDateWorn={setDateWorn} 
-            setRequestedWatchId={setRequestedWatchId}
-            />
-          )}
-        </Async.Fulfilled>
-        <Async.Rejected>{error => `Something went wrong: ${error.message}`}</Async.Rejected>
-        </Async>
+      <WatchDetails 
+      response={activeWatchDetails} 
+      setDateWorn={setDateWorn} 
+      setRequestedWatchId={setRequestedWatchId}
+      />
     )
 }

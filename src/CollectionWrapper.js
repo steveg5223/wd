@@ -1,52 +1,41 @@
-import React from 'react';
-import Async from "react-async";
+import React, { useState, useEffect } from 'react';
 import Collection from './Collection';
 import WatchDetails from './WatchDetails'
 
 export default function CollectionWrapper(props) {
     const {setDateWorn, requestedWatchId, setRequestedWatchId} = props;
+    const [watchList, setWatchList] = useState({watchList: []});
+    const [activeWatchDetails, setActiveWatchDetails] = useState({});
 
-    const getAllWatches = async () => {
-        const res = await fetch(`/collection/phpsrc/getCollection.php`)
-        if (!res.ok) throw new Error(res.statusText);
-        return res.json()
-      };
-      
-    const chooseWatch = async () => {
-        const res = await fetch(`/collection/phpsrc/getWatchDetails.php?watchId=${requestedWatchId}`, { 
-        method: 'GET',
-        })
-        if (!res.ok) throw new Error(res.statusText);
-        return res.json();
-    };
+      useEffect(() => {
+        const url = `/collection/phpsrc/getCollection.php`;
+        if (requestedWatchId === null) {
+          fetch(url)
+            .then((response) => { return response.json(); })
+            .then((data) => { setWatchList(data);})
+        }
+      }, [requestedWatchId]);
+  
+      useEffect(() => {
+        const url = `/collection/phpsrc/getWatchDetails.php?watchId=${requestedWatchId}`;
+        if (requestedWatchId !== null) {
+          fetch(url)
+          .then((response) => { return response.json(); })
+          .then((data) => { setActiveWatchDetails(data); })
+        }
+      }, [requestedWatchId]);
 
     return requestedWatchId === null ? (
-        <Async promiseFn={getAllWatches} >
-          <Async.Pending>Loading...</Async.Pending>
-          <Async.Fulfilled>
-            {response => (
-              <Collection 
-              response={response} 
-              setDateWorn={setDateWorn} 
-              setRequestedWatchId={setRequestedWatchId}
-              />
-            )}
-          </Async.Fulfilled>
-          <Async.Rejected>{error => `Something went wrong: ${error.message}`}</Async.Rejected>
-          </Async>
-    ) : (
-        <Async promiseFn={chooseWatch} >
-        <Async.Pending>Loading...</Async.Pending>
-        <Async.Fulfilled>
-          {response => (
-            <WatchDetails 
-            response={response} 
+        <Collection 
+            response={watchList} 
             setDateWorn={setDateWorn} 
             setRequestedWatchId={setRequestedWatchId}
-            />
-          )}
-        </Async.Fulfilled>
-        <Async.Rejected>{error => `Something went wrong: ${error.message}`}</Async.Rejected>
-        </Async>
+        />
+    ) : (
+    <WatchDetails 
+        response={activeWatchDetails} 
+        setDateWorn={setDateWorn} 
+        setRequestedWatchId={setRequestedWatchId}
+    />
     )
 }
