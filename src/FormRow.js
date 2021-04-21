@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
         backgroundPosition: 'right',
     },
     paperImage : {
-        height: '250px',
+        height: '300px',
         float: 'right',
     },
     paperButtonWrapper: {
@@ -35,6 +35,7 @@ const useStyles = makeStyles((theme) => ({
       textAlign: 'right',
       verticalAlign: 'bottom',
       width: '150px',
+      paddingTop: '10px',
     },
     paperButton : {
       marginLeft: '10px',

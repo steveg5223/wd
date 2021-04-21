@@ -3,9 +3,11 @@ import DuJour from './DuJour';
 import WatchDetails from './WatchDetails'
 
 export default function DuJourWrapper(props) {
+    const initialWatchList = {watchList: []};
+    const initialWatchDetails = {photos: [], observations: []}
     const {setDateWorn, requestedWatchId, setRequestedWatchId, updatedDate} = props;
-    const [activeWatchList, setActiveWatchList] = useState({watchList: []});
-    const [activeWatchDetails, setActiveWatchDetails] = useState({});
+    const [activeWatchList, setActiveWatchList] = useState(initialWatchList);
+    const [activeWatchDetails, setActiveWatchDetails] = useState(initialWatchDetails);
 
     useEffect(() => {
       const url = `/collection/phpsrc/getActive.php`;
