@@ -11,17 +11,20 @@ const useStyles = makeStyles((theme) => ({
   
   export default function Collection(props) {
     const classes = useStyles();
-    let numPerRow; 
-    const [setDateWorn, setRequestedWatchId] = props;
+    let numPerRow;
+    const setDateWorn = props.setDateWorn;
+    const setRequestedWatchId = props.setRequestedWatchId;
     const isLoggedIn = props.response.isLoggedIn;
+    const watches = [];
+    const inpuWatchList = props.response.watchList.slice();
+
     switch (Math.floor(window.screen.availWidth / 500)) {
         case 0: numPerRow = 1; break; 
         case 1: numPerRow = 2; break; 
         case 2: numPerRow = 3; break; 
         default: numPerRow = 4; break;  
     }
-    const watches = [];
-    const inpuWatchList = props.response.watchList.slice();
+
     while (inpuWatchList.length > numPerRow) {
       watches.push(inpuWatchList.splice(0,numPerRow));
     };

@@ -29,9 +29,9 @@ const useStyles = makeStyles((theme) => ({
   }));
   
   export default function WatchDetails(props) {
-      const {response, setDateWorn, setRequestedWatchId} = props;
-      const {photos, observations} = response;
-      console.log('photos: %o, observations: %o', photos, observations);
+      const resp = props.response;
+      const setRequestedWatchId = props.setRequestedWatchId;
+      const {photos, observations} = resp;
       const classes = useStyles();
 
       const handleClickResetWatchId = () => {
@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
           <div>
               <h2>WatchDetails Page</h2>
                 <p>Watch Details Response From Server:</p>
-                <p>{JSON.stringify(response)}}</p>
+                <p>{JSON.stringify(resp)}}</p>
                 <Button 
                     variant="contained" 
                     color="primary" 
@@ -66,19 +66,67 @@ const useStyles = makeStyles((theme) => ({
                 </Button>
                 <div className={classes.root}>
                     <Grid container spacing={1}>
-                        <Grid container item xs={12} spacing={3}>
+                    <Grid container item xs={4} spacing={3} key="photoContainer">
                             {photos.sort(sortImages).map((photo, index) => {
                                 const image = `/collection/img${photo}`;
                                 return (
                                     <Paper className={classes.paper}>
                                         <div className={classes.paperWrapper} key={`img_${index}`}>
                                             <div className={classes.paperImageWrapper} >
-                                                <img className={classes.paperImage} src={image} alt={`${response.make} ${response.model}`} />
+                                                <img className={classes.paperImage} src={image} alt={`${resp.make} ${resp.model}`} />
                                             </div>
                                         </div>
                                     </Paper>
                                 );
                             })}
+                        </Grid>
+                        <Grid container direction="column"  item xs={8} spacing={3} key="contentContainer">
+                            <Grid>
+                                <table>
+                                <tr>
+                                        <td>WatchId: </td>
+                                        <td>${resp.watchId}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Make: </td>
+                                        <td>${resp.make}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>model: </td>
+                                        <td>{resp.model}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Description: </td>
+                                        <td>{resp.descr}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Circa: </td>
+                                        <td>{resp.circa}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Active?: </td>
+                                        <td>{resp.active ? 'Yes' : 'No'}</td>
+                                    </tr>
+                                </table>
+                            </Grid>
+                            <Grid>
+                                <table>
+                                    <tr>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Drift</th>
+                                        <th scope="col">Adjusted Drift</th>
+                                    </tr>
+                                    {observations.map((observation, index) => {
+                                        return (
+                                            <tr>
+                                                <td key="date">{observation.date}</td>
+                                                <td key="drift">{observation.drift}</td>
+                                                <td key="adjusted_drift">{observation.adjusted_drift}</td>
+                                            </tr>
+                                        );
+                                    })}
+                                </table>
+                            </Grid>
                         </Grid>
                     </Grid>
                 </div>

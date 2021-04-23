@@ -16,6 +16,7 @@ export default function DuJourWrapper(props) {
           .then((response) => { return response.json(); })
           .then((data) => {
             setActiveWatchList(data);
+            setActiveWatchDetails({photos: [], observations: []});
           })
       }
     }, [requestedWatchId, updatedDate]);

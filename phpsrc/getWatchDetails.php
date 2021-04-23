@@ -56,7 +56,7 @@ if (is_dir($dir)) {
         closedir($dh);
     }
 }
-sort($output->photos);
+rsort($output->photos);
 
 echo json_encode($output);
 $mysqli->close();

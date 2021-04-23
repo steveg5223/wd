@@ -62,7 +62,6 @@ export default function SimpleTabs() {
     setSelectedTab(newValue);
   };
 
-
   const setDateWorn = async (watchId) => {
     const now = Math.round(Date.now() / 1000);
     const res = await fetch(`/collection/phpsrc/updateDateWorn.php`, { 

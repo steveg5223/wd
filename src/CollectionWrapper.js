@@ -3,9 +3,11 @@ import Collection from './Collection';
 import WatchDetails from './WatchDetails'
 
 export default function CollectionWrapper(props) {
+    const initialWatchList = {watchList: []};
+    const initialWatchDetails = {photos: [], observations: []}
     const {setDateWorn, requestedWatchId, setRequestedWatchId} = props;
-    const [watchList, setWatchList] = useState({watchList: []});
-    const [activeWatchDetails, setActiveWatchDetails] = useState({});
+    const [watchList, setWatchList] = useState(initialWatchList);
+    const [activeWatchDetails, setActiveWatchDetails] = useState(initialWatchDetails);
 
       useEffect(() => {
         const url = `/collection/phpsrc/getCollection.php`;
@@ -21,7 +23,10 @@ export default function CollectionWrapper(props) {
         if (requestedWatchId !== null) {
           fetch(url)
           .then((response) => { return response.json(); })
-          .then((data) => { setActiveWatchDetails(data); })
+          .then((data) => { 
+            setActiveWatchDetails(data); 
+            setActiveWatchDetails({photos: [], observations: []});
+          })
         }
       }, [requestedWatchId, setDateWorn]);
 
