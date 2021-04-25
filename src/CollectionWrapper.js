@@ -14,7 +14,10 @@ export default function CollectionWrapper(props) {
         if (requestedWatchId === null) {
           fetch(url)
             .then((response) => { return response.json(); })
-            .then((data) => { setWatchList(data);})
+            .then((data) => { 
+              setWatchList(data);
+              setActiveWatchDetails({photos: [], observations: []});
+            })
         }
       }, [requestedWatchId, setDateWorn]);
   
@@ -25,7 +28,6 @@ export default function CollectionWrapper(props) {
           .then((response) => { return response.json(); })
           .then((data) => { 
             setActiveWatchDetails(data); 
-            setActiveWatchDetails({photos: [], observations: []});
           })
         }
       }, [requestedWatchId, setDateWorn]);

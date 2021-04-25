@@ -26,6 +26,40 @@ const useStyles = makeStyles((theme) => ({
         height: '250px',
         float: 'right',
     },
+    paperButtonWrapper: {
+        display: 'block',
+        width: '100%',
+        float: 'left',
+      },
+      paperButtonDiv : {
+        display: 'block',
+        textAlign: 'right',
+        verticalAlign: 'bottom',
+        width: '250px',
+        paddingTop: '10px',
+      },
+      clearBoth: {
+          clear: 'both',
+          marginBottom: '10px',
+      },
+      paperButton : {
+        marginLeft: '10px',
+      },
+      detailsTable: {
+        width: '100%',
+        padding: '5px',
+        border: '1px solid black',
+        marginBottom: '10px',
+    },
+      observationTable : {
+          width: '40%',
+          padding: '5px',
+          border: '1px solid black',
+          marginBottom: '10px',
+      },
+      observationDetails : {
+          textAlign: 'right',
+      },
   }));
   
   export default function WatchDetails(props) {
@@ -55,15 +89,19 @@ const useStyles = makeStyles((theme) => ({
       return (
           <div>
               <h2>WatchDetails Page</h2>
-                <p>Watch Details Response From Server:</p>
-                <p>{JSON.stringify(resp)}}</p>
-                <Button 
-                    variant="contained" 
-                    color="primary" 
-                    onClick={handleClickResetWatchId()}
-                >
-                    Return to Collection
-                </Button>
+                <div className={classes.paperButtonWrapper}>
+                    <div className={classes.paperButtonDiv}>
+                        <Button
+                        className={classes.paperButton} 
+                        variant="contained" 
+                        color="primary" 
+                        onClick={handleClickResetWatchId()}
+                        >
+                            Return to Collection
+                        </Button>
+                    </div>
+                </div>
+                <div className={classes.clearBoth}></div>
                 <div className={classes.root}>
                     <Grid container spacing={1}>
                     <Grid container item xs={4} spacing={3} key="photoContainer">
@@ -82,17 +120,17 @@ const useStyles = makeStyles((theme) => ({
                         </Grid>
                         <Grid container direction="column"  item xs={8} spacing={3} key="contentContainer">
                             <Grid>
-                                <table>
+                                <table className={classes.detailsTable}>
                                 <tr>
                                         <td>WatchId: </td>
-                                        <td>${resp.watchId}</td>
+                                        <td>{resp.watchId}</td>
                                     </tr>
                                     <tr>
                                         <td>Make: </td>
-                                        <td>${resp.make}</td>
+                                        <td>{resp.make}</td>
                                     </tr>
                                     <tr>
-                                        <td>model: </td>
+                                        <td>Model: </td>
                                         <td>{resp.model}</td>
                                     </tr>
                                     <tr>
@@ -110,7 +148,7 @@ const useStyles = makeStyles((theme) => ({
                                 </table>
                             </Grid>
                             <Grid>
-                                <table>
+                                <table className={classes.observationTable}>
                                     <tr>
                                         <th scope="col">Date</th>
                                         <th scope="col">Drift</th>
@@ -120,8 +158,16 @@ const useStyles = makeStyles((theme) => ({
                                         return (
                                             <tr>
                                                 <td key="date">{observation.date}</td>
-                                                <td key="drift">{observation.drift}</td>
-                                                <td key="adjusted_drift">{observation.adjusted_drift}</td>
+                                                <td 
+                                                className={classes.observationDetails}
+                                                key="drift">
+                                                    {observation.drift}
+                                                </td>
+                                                <td 
+                                                className={classes.observationDetails}
+                                                key="adjusted_drift">
+                                                    {observation.adjusted_drift}
+                                                </td>
                                             </tr>
                                         );
                                     })}
