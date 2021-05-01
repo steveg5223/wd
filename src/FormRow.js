@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
         backgroundPosition: 'right',
     },
     paperImage : {
-        height: '300px',
+        height: '400px',
         float: 'right',
     },
     paperButtonWrapper: {
@@ -63,7 +63,7 @@ export default function FormRow(props) {
   return (
     <React.Fragment>
         {watchlist.map((watch) => {
-            const image = `/collection/phpsrc/getImageThumb.php?path=../img/wd/${watch.watchId}/face&width=300&height=300`;
+            const image = `/collection/phpsrc/getImageThumb.php?path=../img/wd/${watch.watchId}/face`;
             const circa = watch.circa ? `Circa ${watch.circa}` : '';
             const post = `${circa} ${watch.make} ${watch.model} ${watch.description} #womw #wruw #watch #watchnerd`
             return (

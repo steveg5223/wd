@@ -60,6 +60,7 @@ export default function SimpleTabs() {
 
   const selectNewTab = (event, newValue) => {
     setSelectedTab(newValue);
+    setRequestedWatchId(null);
   };
 
   const setDateWorn = async (watchId) => {
@@ -93,7 +94,7 @@ export default function SimpleTabs() {
           requestedWatchId={requestedWatchId}
         />
       </TabPanel>
-      <TabPanel value={selectedTab} index={1} heading={"You need to buy another watch."}>
+      <TabPanel value={selectedTab} index={1} heading={"You should buy another watch."}>
         <CollectionWrapper 
           setDateWorn={setDateWorn} 
           setRequestedWatchId={setRequestedWatchId}

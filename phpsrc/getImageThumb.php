@@ -20,17 +20,25 @@ if ($imageAtime) {
 
     if (!$thumbAtime || $imageAtime > $thumbAtime)
     {
-        if ($size_arr[2] == IMAGETYPE_GIF) $image = imagecreatefromgif($path);
-        else if ($size_arr[2] == IMAGETYPE_JPEG) $image = imagecreatefromjpeg($path);
-        else if ($size_arr[2] == IMAGETYPE_PNG) $image = imagecreatefrompng($path);
+        if ($size_arr[2] == IMAGETYPE_GIF) { 
+            $image = imagecreatefromgif($path);
+        }
+        else if ($size_arr[2] == IMAGETYPE_JPEG) {
+            $image = imagecreatefromjpeg($path);
+        }
+        else if ($size_arr[2] == IMAGETYPE_PNG) {
+            $image = imagecreatefrompng($path);
+        }
         else die_default_image();
 
         resize_image($thumbPath, $image, $size_arr, $output_width, $output_height);
     }
-
-    header('Content-Type: image/jpg');
+    $contentType = $size_arr[2] == IMAGETYPE_GIF ? 'image/gif' : $size_arr[2] == IMAGETYPE_JPEG ? 'image/jpg' : 'image/png';
+    header('Pragma: public');
+    header('Cache-Control: max-age=3600');
+    header('Expires: '. gmdate('D, d M Y H:i:s \G\M\T', time() + 3600));
+    header('Content-Type: ' . $contentType);
     header('Content-Disposition: inline; filename="' . basename($path) . '"');
-    header("Cache-Control: max-age=" . 60 * 60 );
     echo file_get_contents($thumbPath);
 
 }
