@@ -9,7 +9,7 @@ $query = "select watchId,  circa, make, model, description,
 (SELECT date_last_worn last FROM `observation` o where w.watchId = o.watchId order by last desc limit 1) last_worn
 from watch w 
 where active
-order by last_worn desc";
+order by last_worn";
 $result = $mysqli->query($query);
 
 /* fetch associative array */
