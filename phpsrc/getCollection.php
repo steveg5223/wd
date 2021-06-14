@@ -5,7 +5,10 @@ session_start();
 require 'connection.php';
 
 // $sqlquery = "SELECT * from watch";
-$query = "SELECT * from watch order by make, model";
+$query = "select watchId,  circa, make, model, description,
+(SELECT date_last_worn last FROM `observation` o where w.watchId = o.watchId order by last desc limit 1) last_worn
+from watch w 
+order by make, model";
 $result = $mysqli->query($query);
 
 /* fetch associative array */
