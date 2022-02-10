@@ -111,7 +111,7 @@ const useStyles = makeStyles((theme) => ({
                                     <Paper className={classes.paper}>
                                         <div className={classes.paperWrapper} key={`img_${index}`}>
                                             <div className={classes.paperImageWrapper} >
-                                                <a href={image} target="_blank">
+                                                <a href={image}  rel="noreferrer" target="_blank">
                                                     <img className={classes.paperImage} src={image} alt={`${resp.make} ${resp.model}`} />
                                                 </a>
                                             </div>
