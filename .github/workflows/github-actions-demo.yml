@@ -1,6 +1,13 @@
 name: GitHub Actions Demo
 on: [push]
 jobs:
+ curl:
+    runs-on: ubuntu-latest
+    steps:
+    - name: curl
+      uses: wei/curl@master
+      with:
+        args: https://psenakwatch.com/collection/phpsrc/schedLogger.php?sched=scheduled_ts&start=start_ts&diff=diff_ts
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
     steps:
