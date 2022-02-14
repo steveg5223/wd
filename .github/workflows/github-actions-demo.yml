@@ -7,7 +7,7 @@ jobs:
     - name: curl
       uses: wei/curl@master
       with:
-        args: "https://psenakwatch.com/collection/phpsrc/schedLogger.php?sched=scheduled_ts&start=start_ts&diff=diff_ts"
+        args: "https://psenakwatch.com/collection/phpsrc/schedLogger.php?sched=github_actions&start=github_actionss&diff=github_actions"
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
     steps:
