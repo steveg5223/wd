@@ -2,4 +2,4 @@
 
 Requirements document under construction.
 
-Please check back later for updte content
+Please check back later for updated content
