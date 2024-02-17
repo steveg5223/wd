@@ -77,10 +77,13 @@ export default function FormRow(props) {
                     <div className={classes.paperWrapper}>
                         <div className={classes.paperList} key={'post_' + watch.watchId}>
                             <span>
-                              {post}<br /> 
+                              {post} 
+                              <br /> 
                               Date last worn:<br /> 
                               {watch.last_worn}
                             </span>
+                            <br /> 
+                            <button onClick={() => {navigator.clipboard.writeText(post)}} >Copy</button>
                         </div> 
                     </div>
                       <div className={classes.paperButtonWrapper}>

@@ -86,7 +86,7 @@ export default function SimpleTabs() {
           <Tab label="About" {...a11yProps(2)} />
         </Tabs>
       </AppBar>
-      <TabPanel value={selectedTab} index={0} heading={"You should really wear one of these..."}>
+      <TabPanel value={selectedTab} index={0} heading={"You should really wear one of these"}>
         <DuJourWrapper 
           setDateWorn={setDateWorn} 
           updatedDate={updatedDate}
