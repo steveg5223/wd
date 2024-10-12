@@ -8,6 +8,9 @@ int brakePin2 = 8;
 // where we are in the loop
 int loopState = 0;
 
+// pwm work duty
+int pwmWD = 70;
+
 //boolean to switch direction
 bool directionState;
 
@@ -25,41 +28,38 @@ pinMode(brakePin2, OUTPUT);
 
 void loop() {
 
-//change direction every loop()
-directionState = !directionState;
-
 //write a low state to the direction pin (13)
-if(directionState == false){
-  digitalWrite(directionPin1, LOW);
-  digitalWrite(directionPin2, LOW);
-}
+digitalWrite(directionPin1, LOW);
+digitalWrite(directionPin2, LOW);
 
-//write a high state to the direction pin (13)
-else{
-  digitalWrite(directionPin1, HIGH);
-  digitalWrite(directionPin2, HIGH);
-
-}
-
-//release breaks
-digitalWrite(brakePin1, LOW);
-digitalWrite(brakePin2, LOW);
 
 //set work duty for the motor
-analogWrite(pwmPin1,100);
-analogWrite(pwmPin2,100);
+analogWrite(pwmPin1,pwmWD);
+analogWrite(pwmPin2,pwmWD);
 
 
-delay(30000);
+delay(5000);
 
 //activate breaks
 digitalWrite(brakePin1, HIGH);
 digitalWrite(brakePin2, HIGH);
 
+delay(500);
+//release breaks
+digitalWrite(brakePin1, LOW);
+digitalWrite(brakePin2, LOW);
 
+digitalWrite(directionPin1, HIGH);
+digitalWrite(directionPin2, HIGH);
+
+//set work duty for the motor
+analogWrite(pwmPin1,pwmWD);
+analogWrite(pwmPin2,pwmWD);
+
+delay(5000);
 //set work duty for the motor to 0 (off)
 analogWrite(pwmPin1, 0);
 analogWrite(pwmPin2, 0);
 
-delay(60000);
+delay(50000);
 }
