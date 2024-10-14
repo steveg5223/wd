@@ -9,9 +9,6 @@ int brakePin2 = 8;
 int loopState = 0;
 unsigned long currentMillis;
 unsigned long loopStartMillis;
-unsigned long forwardEndMillis;
-unsigned long reverseEndMillis;
-unsigned long pauseEndMillis;
 unsigned long sample = 0;
 
 // pwm work duty
