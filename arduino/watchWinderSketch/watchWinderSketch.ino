@@ -1,14 +1,7 @@
 // motor control pins
-int directionPin1 = 12;
-int pwmPin1 = 3;
-int brakePin1 = 9;
-int directionPin2 = 13;
-int pwmPin2 = 11;
-int brakePin2 = 8;
-// pwm work duty
-int pwmWD = 100;
-//boolean to switch direction
-bool directionState;
+int relayPins[] = { 4, 7, 8, 12 };
+int relayCount = 4;
+int activeRelay;
 
 // loop state 
 int winderState = 0;
@@ -22,136 +15,142 @@ int sensorValue = 0;
 bool isSwitchOn;
 bool isSwitchStateChanged;
 
-void startMotors () {
-  //write direction to the direction pin (13)
-  directionState = winderState == 1 ? 0 : 1;
-  digitalWrite(directionPin1, directionState);
-  digitalWrite(directionPin2, directionState);
-
-  //set work duty for the motor
-  analogWrite(pwmPin1,pwmWD);
-  analogWrite(pwmPin2,pwmWD);
+void startMotor () {
+   digitalWrite(relayPins[activeRelay], HIGH);
 }
-void stopMotors () {
-  //set work duty for the motor
-  analogWrite(pwmPin1,0);
-  analogWrite(pwmPin2,0);
-
-  //activate breaks
-  digitalWrite(brakePin1, HIGH);
-  digitalWrite(brakePin2, HIGH);
-
-  delay(100);
-  //release breaks
-  digitalWrite(brakePin1, LOW);
-  digitalWrite(brakePin2, LOW);
+void stopMotor () {
+  Serial.println("in stopMotor, about to stop all relays");
+  for (int thisRelay = 0; thisRelay < relayCount; thisRelay++) {
+    digitalWrite(relayPins[thisRelay], LOW);
+  }
 }
 
 void doLoop() {
+    // Serial.print("start of doLoop, winderState: ");
+    // Serial.println(winderState);
+    // Serial.print("loop time: ");
+    // Serial.println((millis() - loopStartMillis) / 1000);
+    // delay(500);
     switch (winderState) {
     case 0:  // initialize the state timer
-      Serial.println("init");
-      //write a low state to the direction pin (13)
+      // Serial.println("initialize loop");
+      activeRelay = 0;
       loopStartMillis = millis();
       winderState++;
-      Serial.println("Done init");
+      // Serial.println("Done init");
       break;
     case 1:  // start forward state
-      Serial.println("Forward");
-      startMotors();
+      // Serial.print("Starting forward motor #:");
+      // Serial.println(activeRelay);
+      startMotor();
       winderState++;
-      Serial.println("Done transitioning to Forward");
+      // Serial.println("Done transitioning to Forward");
+      // delay(1000);
       break;
     case 2:  // waiting for forward to end
-      Serial.println("waiting for forward to end");
+    //  Serial.println("waiting for forward to end");
       currentMillis = millis();
-      if (currentMillis - loopStartMillis > (3 * 60 * 1000)) { // are we at end of foward motion?
-        stopMotors();
+      if (currentMillis - loopStartMillis > (300000)) { // are we at end of foward motion?
+        stopMotor();
+        // Serial.println("Done transitioning to End of Forward");
+        // Serial.print("Starting forward motor #:");
+        // Serial.println(activeRelay);
+        // delay(1000);
+        activeRelay = 1;
+        startMotor();
+        // Serial.println("Done transitioning to Forward");        
+        delay(1000);
         winderState++;
-        Serial.println("Done transitioning to End of Forward");
       }
       break;
-    case 3:  // starting reverse state
-      Serial.println("reverse");
-      startMotors();
-      winderState++;
-      Serial.println("done starting reverse");
-      break;
-    case 4:  // waiting for reverse to end
-      Serial.println("waiting for reverse to end");
+    case 3: // waiting for loop to end
+      // Serial.println("in case 3");
+      // Serial.print("(Start of state 3.  activeRelay: ");
+      // Serial.println(activeRelay);
       currentMillis = millis();
-      if (currentMillis - loopStartMillis > (6 * 60 * 1000)) {{ // are we at end of reverse motion?
-        stopMotors();
-        winderState++;
-        Serial.println("end of reverse");
+      if (currentMillis - loopStartMillis > (600000)) {
+        // Serial.println('(end of state 3.  activeRelay: ');
+        // Serial.println(activeRelay);
+          stopMotor();
+          if (activeRelay == 0) {
+          activeRelay = 1;          
+        }
+        else {
+          winderState++;
+        }
+        // Serial.print("finished waiting for loop to end activeRelay: ");
+        // Serial.println(activeRelay);
+      }
+      else {
+        // Serial.print("Not ready to end state 3, loop time: ");
+        // Serial.println((currentMillis - loopStartMillis));
+        // Serial.print("Target end loop time: ");
+        // Serial.println(60000);
+        // delay(500);
       }
       break;
-    case 5:  // waiting for loop to end
+    case 4:
+      // Serial.print("In state 4, loop time: ");
+      // Serial.println((currentMillis - loopStartMillis));
+      // Serial.print("Target end loop time: ");
+      // Serial.println(120000);
+      // delay(500);
       currentMillis = millis();
-      if (sample++ % 10000 == 0) {
-       Serial.println((currentMillis - loopStartMillis) / 1000);
+      if (currentMillis - loopStartMillis > (1200000)) {
+          winderState = 0;
       }
-      if (currentMillis - loopStartMillis > (20 * 60 * 1000)) {
-        winderState = 0;
-      }
-      break;
-
     }
-  }
 }
 
 void setup() {
   
   Serial.begin(9600);
-  //define pins
-  pinMode(directionPin1, OUTPUT);
-  pinMode(pwmPin1, OUTPUT);
-  pinMode(brakePin1, OUTPUT);
-  pinMode(directionPin2, OUTPUT);
-  pinMode(pwmPin2, OUTPUT);
-  pinMode(brakePin2, OUTPUT);
+  pinMode(sensorPin,INPUT_PULLUP);
   sensorValue = analogRead(sensorPin);
-  isSwitchOn = sensorValue > 900 ? true : false;
-  Serial.print("in setup, isSwitchOn = ");
-  Serial.println(isSwitchOn);
+  isSwitchOn = sensorValue == 1023 ? true : false;
+  // Serial.print("in setup, isSwitchOn = ");
+  // Serial.println(isSwitchOn);
+  // delay(1000);
+  // Serial.print("in setup, about to initialize relays");
+  for (int thisRelay = 0; thisRelay < relayCount; thisRelay++) {
+    pinMode(relayPins[thisRelay], OUTPUT);
+  }
 }
 
 void loop() {
-
   sensorValue = analogRead(sensorPin);
-  isSwitchStateChanged = isSwitchOn ? 
-                          sensorValue < 900 ? true : false :
-                          sensorValue >= 900 ? true : false;
+  isSwitchStateChanged = sensorValue < 1022 ? isSwitchOn : !isSwitchOn;
   // Serial.print("start of loop, sensorValue = ");
   // Serial.println(sensorValue);
+  // delay(500);
   // Serial.print("start of loop, isSwitchOn = ");
   // Serial.println(isSwitchOn);
   // Serial.print("isSwitchStateChanged = ");
   // Serial.println(isSwitchStateChanged);
-  // delay(500);
+  // delay(5000);
   if (isSwitchStateChanged) {
     //  Serial.println("Switch state changed");
      // delay(500);
     if (isSwitchOn) {
       // switch was on and it's now off
-      Serial.println("switch was on and it's now off");
-      stopMotors();
-      Serial.println("Just finished calling stop Motors");
+      // Serial.println("switch was on and it's now off");
+      stopMotor();
+      // Serial.println("Just finished calling stop Motor");
       // delay(500);
     }
     else {
       // switch was off and it's now on
-      Serial.println("switch was off and it's now on");
+      // Serial.println("switch was off and it's now on");
       winderState = 0; // restart
       // delay(500);
     }
   }
-  isSwitchOn = sensorValue > 900;
+  isSwitchOn = sensorValue >= 1022;
   if (isSwitchOn) {
     // Serial.println("Switch is on... calling doLoop");
     doLoop();
   }
   else {
-    Serial.println("Switch is of... not calling doLoop");
+    // Serial.println("Switch is off... not calling doLoop");
   }
 }
