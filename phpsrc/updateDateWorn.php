@@ -1,3 +1,5 @@
+
+text/x-generic updateDateWorn.php ( PHP script, ASCII text )
 <?php 
 // Initialize the session
 session_start();
@@ -26,7 +28,7 @@ else {
     $stmt->execute();
   
     if ($stmt->error == '') {
-      $response = new stdClass();
+      $response = (object)[];
       $response->message = 'New record created successfully';
       header('Content-Type: application/json');
       echo json_encode($response);
