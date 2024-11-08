@@ -7,7 +7,7 @@
     $filename = "../log/" . $now . '.csv';
 
     error_log($log_msg, 3, $filename);
-    $response = new stdClass();
+    $response = (object){};
     $response->msg = $log_msg;
     header('Content-type: application/json');
     echo json_encode($response);

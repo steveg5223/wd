@@ -18,7 +18,7 @@ while ($row = $result->fetch_assoc()) {
 }
 /* free result set */
 mysqli_free_result($result);
-$output = new stdClass();
+$output = (object)[];
 $output->watchList = $watch_list;
 $output->isLoggedIn = (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) ?
     true : false;
