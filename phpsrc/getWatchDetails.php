@@ -2,7 +2,7 @@
 // Initialize the session
 session_start();
 header('Content-Type: application/json');
-$output = new stdClass();
+$output = (object)[];
 $output->isLoggedIn = (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) ? true : false;
 
 require 'connection.php';
@@ -36,7 +36,7 @@ $stmt->execute();
 $stmt->bind_result($date, $drift, $adjusted_drift);
 $output->observations = array();
 while ($stmt->fetch()) {
-    $entry = new stdClass();
+    $entry = (object)[];
     $entry->date = $date;
     $entry->drift = $drift;
     $entry->adjusted_drift = $adjusted_drift;
