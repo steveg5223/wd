@@ -9,6 +9,7 @@ import Box from '@material-ui/core/Box';
 import About from './About';
 import DuJourWrapper from './DuJourWrapper';
 import CollectionWrapper from './CollectionWrapper'
+
 function TabPanel(props) {
   const { children, value, index, heading, ...other } = props;
 
@@ -50,6 +51,10 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
   },
+  formControl: {
+    margin: theme.spacing(2),
+    minWidth: 200,
+  },
 }));
 
 export default function SimpleTabs() {
@@ -57,6 +62,25 @@ export default function SimpleTabs() {
   const [selectedTab, setSelectedTab] = React.useState(0);
   const [updatedDate, setUpdatedDate] = React.useState(Date.now());
   const [requestedWatchId, setRequestedWatchId] = React.useState(null);
+  const [makes, setMakes] = React.useState([]);
+  const [selectedMake, setSelectedMake] = React.useState('All');
+
+  React.useEffect(() => {
+    fetch('https://psenakwatch.com/collection/phpsrc/getMakes.php')
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.watchList) {
+          setMakes(data.watchList.map(item => item.make));
+        }
+      })
+      .catch(err => {
+        setMakes([]);
+      });
+  }, []);
+
+  const handleMakeChange = (event) => {
+    setSelectedMake(event.target.value);
+  };
 
   const selectNewTab = (event, newValue) => {
     setSelectedTab(newValue);
@@ -92,6 +116,9 @@ export default function SimpleTabs() {
           updatedDate={updatedDate}
           setRequestedWatchId={setRequestedWatchId}
           requestedWatchId={requestedWatchId}
+          selectedMake={selectedMake}
+          makes={makes}
+          handleMakeChange={handleMakeChange}
         />
       </TabPanel>
       <TabPanel value={selectedTab} index={1} heading={"You should buy another watch."}>
@@ -99,6 +126,9 @@ export default function SimpleTabs() {
           setDateWorn={setDateWorn} 
           setRequestedWatchId={setRequestedWatchId}
           requestedWatchId={requestedWatchId}
+          selectedMake={selectedMake}
+          makes={makes}
+          handleMakeChange={handleMakeChange}
         />
       </TabPanel>
       <TabPanel value={selectedTab} index={2} heading={"About page content"}>

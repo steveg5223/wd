@@ -5,7 +5,7 @@ import WatchDetails from './WatchDetails'
 export default function DuJourWrapper(props) {
     const initialWatchList = {watchList: []};
     const initialWatchDetails = {photos: [], observations: []}
-    const {setDateWorn, requestedWatchId, setRequestedWatchId, updatedDate} = props;
+    const {setDateWorn, requestedWatchId, setRequestedWatchId, updatedDate, selectedMake, makes, handleMakeChange} = props;
     const [activeWatchList, setActiveWatchList] = useState(initialWatchList);
     const [activeWatchDetails, setActiveWatchDetails] = useState(initialWatchDetails);
 
@@ -34,9 +34,15 @@ export default function DuJourWrapper(props) {
 
     return requestedWatchId === null ? (
       <DuJour 
-      response={activeWatchList} 
+      response={{
+        ...activeWatchList,
+        watchList: selectedMake === 'All' ? activeWatchList.watchList : activeWatchList.watchList.filter(watch => watch.make === selectedMake)
+      }}
       setDateWorn={setDateWorn} 
       setRequestedWatchId={setRequestedWatchId}
+      makes={makes}
+      selectedMake={selectedMake}
+      handleMakeChange={handleMakeChange}
       />
     ) : (
       <WatchDetails 

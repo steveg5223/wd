@@ -5,7 +5,7 @@ import WatchDetails from './WatchDetails'
 export default function CollectionWrapper(props) {
     const initialWatchList = {watchList: []};
     const initialWatchDetails = {photos: [], observations: []}
-    const {setDateWorn, requestedWatchId, setRequestedWatchId} = props;
+    const {setDateWorn, requestedWatchId, setRequestedWatchId, selectedMake, makes, handleMakeChange} = props;
     const [watchList, setWatchList] = useState(initialWatchList);
     const [activeWatchDetails, setActiveWatchDetails] = useState(initialWatchDetails);
 
@@ -34,9 +34,15 @@ export default function CollectionWrapper(props) {
 
     return requestedWatchId === null ? (
         <Collection 
-            response={watchList} 
+            response={{
+              ...watchList,
+              watchList: selectedMake === 'All' ? watchList.watchList : watchList.watchList.filter(watch => watch.make === selectedMake)
+            }}
             setDateWorn={setDateWorn} 
             setRequestedWatchId={setRequestedWatchId}
+            makes={makes}
+            selectedMake={selectedMake}
+            handleMakeChange={handleMakeChange}
         />
     ) : (
     <WatchDetails 
