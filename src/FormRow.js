@@ -1,46 +1,51 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
+import { styled } from '@mui/material/styles';
+import Paper from '@mui/material/Paper';
+import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
 
-const useStyles = makeStyles((theme) => ({
-    paper: {
-      padding: theme.spacing(1),
-      textAlign: 'left',
-      color: theme.palette.text.secondary,
-      overflow: 'auto',
-    },
-    paperWrapper : {
-        width: '50%',
-        height: '90%',
-        float: 'left',
-    },
-    paperList : {
-       marginLeft: '30px',
-    },
-    paperImageWrapper : {
-        backgroundPosition: 'right',
-    },
-    paperImage : {
-        height: '400px',
-        float: 'right',
-    },
-    paperButtonWrapper: {
-      display: 'table',
-      width: '100%',
-    },
-    paperButtonDiv : {
-      display: 'table-cell',
-      textAlign: 'right',
-      verticalAlign: 'bottom',
-      width: '150px',
-      paddingTop: '10px',
-    },
-    paperButton : {
-      marginLeft: '10px',
-    },
-  }));
+const StyledPaper = styled(Paper)(({ theme }) => ({
+  padding: theme.spacing(1),
+  textAlign: 'left',
+  color: theme.palette.text.secondary,
+  overflow: 'auto',
+}));
+
+const StyledPaperWrapper = styled('div')({
+  width: '50%',
+  height: '90%',
+  float: 'left',
+});
+
+const StyledPaperList = styled('div')({
+  marginLeft: '30px',
+});
+
+const StyledPaperImageWrapper = styled('div')({
+  backgroundPosition: 'right',
+});
+
+const StyledPaperImage = styled('img')({
+  height: '400px',
+  float: 'right',
+});
+
+const StyledPaperButtonWrapper = styled('div')({
+  display: 'table',
+  width: '100%',
+});
+
+const StyledPaperButtonDiv = styled('div')({
+  display: 'table-cell',
+  textAlign: 'right',
+  verticalAlign: 'bottom',
+  width: '150px',
+  paddingTop: '10px',
+});
+
+const StyledPaperButton = styled(Button)({
+  marginLeft: '10px',
+});
  
 export default function FormRow(props) {
     const watchlist = props.watchlist;
@@ -48,7 +53,6 @@ export default function FormRow(props) {
     const setDateWorn = props.setDateWorn;
     const isLoggedIn = props.isLoggedIn;
     const setRequestedWatchId = props.setRequestedWatchId;
-    const classes = useStyles();
     const handleClickDetails = (watchId) => {
       return () => {
         setRequestedWatchId(watchId);
@@ -68,14 +72,14 @@ export default function FormRow(props) {
             const post = `${circa} ${watch.make} ${watch.model} ${watch.description} #womw #wruw #watch #watchnerd`
             return (
                 <Grid item xs={xs} key={watch.watchId}>
-                    <Paper className={classes.paper}>
-                    <div className={classes.paperWrapper} key={'img_' + watch.watchId}>
-                        <div className={classes.paperImageWrapper}>
-                            <img className={classes.paperImage} src={image} alt={`${watch.make} ${watch.model}`} />
-                        </div>
-                    </div>
-                    <div className={classes.paperWrapper}>
-                        <div className={classes.paperList} key={'post_' + watch.watchId}>
+                    <StyledPaper>
+                    <StyledPaperWrapper key={'img_' + watch.watchId}>
+                        <StyledPaperImageWrapper>
+                            <StyledPaperImage src={image} alt={`${watch.make} ${watch.model}`} />
+                        </StyledPaperImageWrapper>
+                    </StyledPaperWrapper>
+                    <StyledPaperWrapper>
+                        <StyledPaperList key={'post_' + watch.watchId}>
                             <span>
                               {post} 
                               <br /> 
@@ -84,31 +88,29 @@ export default function FormRow(props) {
                             </span>
                             <br /> 
                             <button onClick={() => {navigator.clipboard.writeText(post)}} >Copy</button>
-                        </div> 
-                    </div>
-                      <div className={classes.paperButtonWrapper}>
-                      <div className={classes.paperButtonDiv} key={'post_' + watch.watchId}>
-                      <Button 
-                        className={classes.paperButton} 
+                        </StyledPaperList> 
+                    </StyledPaperWrapper>
+                      <StyledPaperButtonWrapper>
+                      <StyledPaperButtonDiv key={'post_' + watch.watchId}>
+                      <StyledPaperButton 
                         variant="contained" 
                         color="primary" 
                         onClick={handleClickDetails(watch.watchId)}
                       >
                         Details
-                      </Button>
+                      </StyledPaperButton>
                       {isLoggedIn && 
-                      <Button 
-                        className={classes.paperButton} 
+                      <StyledPaperButton 
                         variant="contained" 
                         color="primary" 
                         onClick={handleClickResetDate(watch.watchId)}
                       >
                         Reset Date
-                      </Button>
+                      </StyledPaperButton>
                       }
-                    </div> 
-                      </div>
-                    </Paper>
+                    </StyledPaperButtonDiv> 
+                      </StyledPaperButtonWrapper>
+                    </StyledPaper>
                 </Grid>
             );
         })}

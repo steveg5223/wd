@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
+import { styled } from '@mui/material/styles';
+import AppBar from '@mui/material/AppBar';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
 import About from './About';
 import DuJourWrapper from './DuJourWrapper';
 import CollectionWrapper from './CollectionWrapper'
@@ -46,19 +46,17 @@ function a11yProps(index) {
   };
 }
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-    backgroundColor: theme.palette.background.paper,
-  },
-  formControl: {
-    margin: theme.spacing(2),
-    minWidth: 200,
-  },
+const StyledRoot = styled('div')(({ theme }) => ({
+  flexGrow: 1,
+  backgroundColor: theme.palette.background.paper,
+}));
+
+const StyledFormControl = styled('div')(({ theme }) => ({
+  margin: theme.spacing(2),
+  minWidth: 200,
 }));
 
 export default function SimpleTabs() {
-  const classes = useStyles();
   const [selectedTab, setSelectedTab] = React.useState(0);
   const [updatedDate, setUpdatedDate] = React.useState(Date.now());
   const [requestedWatchId, setRequestedWatchId] = React.useState(null);
@@ -102,7 +100,7 @@ export default function SimpleTabs() {
   };
 
   return (
-    <div className={classes.root}>
+    <StyledRoot>
       <AppBar position="static">
         <Tabs value={selectedTab} onChange={selectNewTab} aria-label="simple tabs example">
           <Tab label="Du Jour" {...a11yProps(0)} />
@@ -137,6 +135,6 @@ export default function SimpleTabs() {
       <TabPanel value={selectedTab} index={3} heading={"About page content"}>
         <About />
       </TabPanel>
-    </div>
+    </StyledRoot>
   );
 }

@@ -1,21 +1,18 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
+import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Grid';
 import FormRow from './FormRow';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import Typography from '@material-ui/core/Typography';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import Typography from '@mui/material/Typography';
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-      flexGrow: 1,
-    },
-  }));
+const StyledRoot = styled('div')({
+  flexGrow: 1,
+});
   
   export default function Collection(props) {
-    const classes = useStyles();
     let numPerRow;
     const setDateWorn = props.setDateWorn;
     const setRequestedWatchId = props.setRequestedWatchId;
@@ -38,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
   
     let rowKey = 0;
     return (
-      <div className={classes.root}>
+      <StyledRoot>
         <Grid container spacing={1} alignItems="center">
           <Grid item xs={12}>
             <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -75,7 +72,7 @@ const useStyles = makeStyles((theme) => ({
                 );
           })}
         </Grid>
-      </div>
+      </StyledRoot>
     );
   }
   

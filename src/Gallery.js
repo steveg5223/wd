@@ -1,38 +1,40 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
+import { styled } from '@mui/material/styles';
+import Paper from '@mui/material/Paper';
+import Grid from '@mui/material/Grid';
 
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-      flexGrow: 1,
-    },
-    paper: {
-      padding: theme.spacing(1),
-      textAlign: 'left',
-      color: theme.palette.text.secondary,
-      overflow: 'auto',
-    },
-    paperWrapper : {
-        width: '50%',
-        height: '90%',
-        float: 'left',
-    },
-    paperList : {
-       marginLeft: '30px',
-    },
-    paperImageWrapper : {
-        backgroundPosition: 'right',
-    },
-    paperImage : {
-        height: '250px',
-        float: 'right',
-    },
-  }));
+const StyledRoot = styled('div')({
+  flexGrow: 1,
+});
+
+const StyledPaper = styled(Paper)(({ theme }) => ({
+  padding: theme.spacing(1),
+  textAlign: 'left',
+  color: theme.palette.text.secondary,
+  overflow: 'auto',
+}));
+
+const StyledPaperWrapper = styled('div')({
+  width: '50%',
+  height: '90%',
+  float: 'left',
+});
+
+const StyledPaperList = styled('div')({
+  marginLeft: '30px',
+});
+
+const StyledPaperImageWrapper = styled('div')({
+  backgroundPosition: 'right',
+});
+
+const StyledPaperImage = styled('img')({
+  height: '250px',
+  float: 'right',
+});
   
   export default function DuJour(props) {
-    const classes = useStyles();
     let numPerRow; 
     switch (Math.floor(window.screen.availWidth / 500)) {
         case 0: numPerRow = 1; break; 
@@ -62,18 +64,18 @@ const useStyles = makeStyles((theme) => ({
                 const post = `${circa} ${watch.make} ${watch.model} ${watch.description} #womw #wruw #watch #watchnerd`
                 return (
                     <Grid item xs={xs} key={watch.watchId}>
-                        <Paper className={classes.paper}>
-                        <div className={classes.paperWrapper} key={'img_' + watch.watchId}>
-                            <div className={classes.paperImageWrapper}>
-                                <img className={classes.paperImage} src={image}></img>
-                            </div>
-                        </div>
-                        <div className={classes.paperWrapper}>
-                            <div className={classes.paperList} key={'post_' + watch.watchId}>
+                        <StyledPaper>
+                        <StyledPaperWrapper key={'img_' + watch.watchId}>
+                            <StyledPaperImageWrapper>
+                                <StyledPaperImage src={image}></StyledPaperImage>
+                            </StyledPaperImageWrapper>
+                        </StyledPaperWrapper>
+                        <StyledPaperWrapper>
+                            <StyledPaperList key={'post_' + watch.watchId}>
                                 <span>{post}</span>
-                            </div> 
-                        </div>
-                        </Paper>
+                            </StyledPaperList> 
+                        </StyledPaperWrapper>
+                        </StyledPaper>
                     </Grid>
                 );
             })}
@@ -83,7 +85,7 @@ const useStyles = makeStyles((theme) => ({
 
     let rowKey = 0;
     return (
-      <div className={classes.root}>
+      <StyledRoot>
         <Grid container spacing={1}>
             {watches.map((chunk) => {
                 return (
@@ -93,7 +95,7 @@ const useStyles = makeStyles((theme) => ({
                   );
             })}
         </Grid>
-      </div>
+      </StyledRoot>
     );
   }
   
