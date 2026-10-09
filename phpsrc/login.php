@@ -19,14 +19,14 @@ $username_err = $password_err = $login_err = "";
 if($_SERVER["REQUEST_METHOD"] == "POST"){
  
     // Check if username is empty
-    if(empty(trim($_POST["username"]))){
+    if(empty(trim($_POST["username"] ?? ""))){
         $username_err = "Please enter username.";
     } else{
         $username = trim($_POST["username"]);
     }
     
     // Check if password is empty
-    if(empty(trim($_POST["password"]))){
+    if(empty(trim($_POST["password"] ?? ""))){
         $password_err = "Please enter your password.";
     } else{
         $password = trim($_POST["password"]);
@@ -55,9 +55,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                     $stmt->bind_result($id, $username, $hashed_password);
                     if($stmt->fetch()){
                         if(password_verify($password, $hashed_password)){
-                            // Password is correct, so start a new session
-                            session_start();
-                            
+                            // Password is correct, regenerate the session id
+                            session_regenerate_id(true);
+
                             // Store data in session variables
                             $_SESSION["loggedin"] = true;
                             $_SESSION["id"] = $id;
@@ -65,6 +65,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                             
                             // Redirect user to watch web site
                             header("location: /collection");
+                            exit;
                         } else{
                             // Password is not valid, display a generic error message
                             $login_err = "Invalid username or password.";
@@ -113,7 +114,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
             <div class="form-group">
                 <label>Username</label>
-                <input type="text" name="username" class="form-control <?php echo (!empty($username_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $username; ?>">
+                <input type="text" name="username" class="form-control <?php echo (!empty($username_err)) ? 'is-invalid' : ''; ?>" value="<?php echo htmlspecialchars($username); ?>">
                 <span class="invalid-feedback"><?php echo $username_err; ?></span>
             </div>    
             <div class="form-group">

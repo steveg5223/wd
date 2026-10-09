@@ -8,9 +8,9 @@ $output->isLoggedIn = (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] ===
 require 'connection.php';
 
 if ($mysqli->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    die("Connection failed: " . $mysqli->connect_error);
 }
-$watchid = $_GET['watchId'];
+$watchid = $_GET['watchId'] ?? '';
 // get watch details
 $sql = "SELECT * from watch where watchId = ?";
 $stmt = $mysqli->prepare($sql);
@@ -50,7 +50,7 @@ $output->photos = array();
 if (is_dir($dir)) {
     if ($dh = opendir($dir)) {
         while (($file = readdir($dh)) !== false) {
-            if ($file == "." || $file == ".." || strpos ($file, ".thumb") != false) continue;  // don't use dot and dot dot
+            if ($file == "." || $file == ".." || str_contains($file, ".thumb")) continue;  // don't use dot and dot dot
             $output->photos[] = "/wd/{$watchid}/" . $file;
         }
         closedir($dh);

@@ -5,7 +5,7 @@ session_start();
 require 'connection.php';
 
 // $sqlquery = "SELECT * from watch";
-$query = "select unique (make) from watch order by 1";
+$query = "select distinct make from watch order by 1";
 $result = $mysqli->query($query);
 
 /* fetch associative array */

@@ -1,14 +1,17 @@
 <?php
-    $interval  =  (isset($_REQUEST['interval'])    && $_REQUEST['interval'] > 1)       ? $_REQUEST['interval']    :  30;
-    $buff_size =  (isset($_REQUEST['buffer_size']) && $_REQUEST['buffer_size'] > 1)    ? $_REQUEST['buffer_size'] : 100;
-    $last_line =  (isset($_REQUEST['last_line'])   && $_REQUEST['last_line'] > 0)      ? $_REQUEST['last_line']   :  0;
-    $last_size =  (isset($_REQUEST['last_size'])   && $_REQUEST['last_size'] > 0)      ? $_REQUEST['last_size']   :  0;
+    $interval  =  (int)($_REQUEST['interval']    ?? 0);
+    $buff_size =  (int)($_REQUEST['buffer_size'] ?? 0);
+    $last_line =  max((int)($_REQUEST['last_line'] ?? 0), 0);
+    $last_size =  max((int)($_REQUEST['last_size'] ?? 0), 0);
+    if ($interval  <= 1) $interval  = 30;
+    if ($buff_size <= 1) $buff_size = 100;
 if (isset($_REQUEST['server']) && isset($_REQUEST['file']) && $_REQUEST['file'] > "")
 {
     // server is set so client is expecting json output
     // open a file and send requested data
     if(@!$line_array = file($_REQUEST['file']))
     {
+        $response_array = array();
         $response_array['status']     = false;
         $response_array['reason']     = "unable to open " . $_REQUEST['file'];
         $output = json_encode($response_array);
@@ -18,6 +21,7 @@ if (isset($_REQUEST['server']) && isset($_REQUEST['file']) && $_REQUEST['file'] 
     $file_lines                   = count($line_array);
     $last_line                    = ($last_line == 0 ? $file_lines - $buff_size : $last_line);
     if($last_line < 0) $last_line = 0; // if buff_size > file_lines, above line returns negative result
+    $response_array = array();
     $response_array['status']     = true;
     $response_array['linect']     = $file_lines;
     $response_array['start_line'] = $last_line;

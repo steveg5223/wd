@@ -1,9 +1,7 @@
-
-text/x-generic updateDateWorn.php ( PHP script, ASCII text )
 <?php 
 // Initialize the session
 session_start();
-if ( ! $_SESSION["loggedin"] ) {
+if (empty($_SESSION["loggedin"])) {
   header('HTTP/1.1 401 Unauthorized');
 }
 else {
